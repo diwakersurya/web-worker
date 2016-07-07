@@ -1,0 +1,34 @@
+<h1>Web Workers example</h1>
+<div class="controls" tabindex="0"></div>
+<form>
+<div><label for="number1">Multiply number 1: </label>
+<input id="number1" type="text" value="0" /></div>
+<div><label for="number2">Multiply number 2: </label>
+<input id="number2" type="text" value="0" /></div>
+</form>
+<p class="result">Result: 0</p>
+<script type="text/javascript">// <![CDATA[
+var first = document.querySelector('#number1'); 
+var second = document.querySelector('#number2');
+var result = document.querySelector('.result'); 
+if (window.Worker) { 
+// Check if Browser supports the Worker api. 
+var myWorker = new Worker("worker.js"); //creates a new web worker with the provided file 
+first.onchange = function()
+{   
+ 	myWorker.postMessage([first.value,second.value]);  
+    console.log('Message posted to worker'); 
+}
+//our event listener receives messages from the worker 
+second.onchange = function() 
+{   
+ myWorker.postMessage([first.value,second.value]); 
+ console.log('Message posted to worker'); 
+} 
+ 
+myWorker.onmessage = function(e) { 
+result.textContent = e.data; 
+ console.log('Message received from worker'); 
+}
+      };
+// ]]></script>
